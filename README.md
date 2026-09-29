@@ -48,6 +48,20 @@ DeepSeek Flash model. JPEG, PNG, GIF, and WebP inputs are accepted by the
 homework runner.
 
 
-## Homework 1 solution: 
-> to students: please fill your solution description here.
+## Homework 1 solution
+
+My solution processes the receipts one at a time using a LangChain chain with deepseek-v4-flash-vision-exp. The prompt asks the model to extract the final payment after rounding, the subtotal before rounding, and all discount amounts as JSON. It also distinguishes purchase amounts from cash tendered, change and card balances, and avoids counting repeated savings summaries twice. The chain parses the JSON, checks the required fields and converts the amounts to Decimal values. Python then sums the final payments for the first question and the subtotals plus discounts for the second question, without adding rounding to the discount amounts. Each response contains one HKD amount with two decimal places. In one run on the seven public receipts, both aggregate answers were marked correct: HK$1974.30 and HK$2348.20.
+
+```mermaid
+flowchart TD
+    A["Receipt images"] --> B["Process each receipt"]
+    B --> C["LangChain prompt and DeepSeek"]
+    C --> D["Parse JSON and validate amounts"]
+    D --> E["Final payment after rounding"]
+    D --> F["Subtotal plus discounts"]
+    E --> G["Sum across receipts using Decimal"]
+    F --> G
+    G --> H["Return two HKD amounts"]
+    H --> I["Provided runner writes results.csv"]
+```
 
